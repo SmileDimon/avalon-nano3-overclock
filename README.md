@@ -423,3 +423,16 @@ free -m
 
 If this guide helped you, consider donating: [**DONATE.md**](DONATE.md)
 
+
+---
+
+## 🔬 Firmware Dump & Analysis
+
+Want to dive deeper? Check out our complete firmware dumping guide: [**FIRMWARE_DUMP.md**](FIRMWARE_DUMP.md)
+
+Topics covered:
+- Extracting firmware with binwalk
+- UBI partition analysis
+- Modifying btcminer parameters
+- Building custom SWU images
+
