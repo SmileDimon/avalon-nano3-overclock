@@ -1,0 +1,123 @@
+{
+  "presets": [
+    {
+      "name": "stock",
+      "label": "🐢 Сток",
+      "description": "Заводские настройки для стабильной работы",
+      "settings": {
+        "frequency_mhz": 500,
+        "voltage_mv": 1200,
+        "work_level": 2,
+        "freq_sel": 0,
+        "voltage_level": 0,
+        "core_clk_sel": 0
+      },
+      "expected_hashrate_ghs": 4000,
+      "expected_power_w": 800,
+      "expected_temp_c": 65,
+      "stability": "excellent",
+      "recommended_for": "daily_mining"
+    },
+    {
+      "name": "medium",
+      "label": "⚡ Средний",
+      "description": "Баланс между производительностью и стабильностью",
+      "settings": {
+        "frequency_mhz": 650,
+        "voltage_mv": 1300,
+        "work_level": 2,
+        "freq_sel": 1,
+        "voltage_level": 25,
+        "core_clk_sel": 0
+      },
+      "expected_hashrate_ghs": 5000,
+      "expected_power_w": 950,
+      "expected_temp_c": 72,
+      "stability": "good",
+      "recommended_for": "daily_mining"
+    },
+    {
+      "name": "fast",
+      "label": "🚀 Быстрый",
+      "description": "Высокая производительность для опытных пользователей",
+      "settings": {
+        "frequency_mhz": 750,
+        "voltage_mv": 1350,
+        "work_level": 2,
+        "freq_sel": 2,
+        "voltage_level": 50,
+        "core_clk_sel": 0
+      },
+      "expected_hashrate_ghs": 5800,
+      "expected_power_w": 1100,
+      "expected_temp_c": 78,
+      "stability": "moderate",
+      "recommended_for": "experienced_users"
+    },
+    {
+      "name": "max",
+      "label": "🔥 МАКС",
+      "description": "Максимальный разгон - используйте на свой риск!",
+      "settings": {
+        "frequency_mhz": 800,
+        "voltage_mv": 1450,
+        "work_level": 2,
+        "freq_sel": 3,
+        "voltage_level": 75,
+        "core_clk_sel": 1
+      },
+      "expected_hashrate_ghs": 6500,
+      "expected_power_w": 1250,
+      "expected_temp_c": 85,
+      "stability": "low",
+      "recommended_for": "testing_only",
+      "warning": "⚠️ Может повредить оборудование! Требует отличного охлаждения!"
+    }
+  ],
+  
+  "custom_presets": {
+    "heater_mode": {
+      "label": "🔥 Обогреватель",
+      "description": "Режим обогревателя с минимальным потреблением",
+      "settings": {
+        "frequency_mhz": 25,
+        "voltage_mv": 1150,
+        "work_level": 0
+      }
+    },
+    "silent_mode": {
+      "label": "🤫 Тихий",
+      "description": "Тихий режим с пониженной производительностью",
+      "settings": {
+        "frequency_mhz": 400,
+        "voltage_mv": 1150,
+        "work_level": 1
+      }
+    },
+    "efficiency_mode": {
+      "label": "⚡ Эффективность",
+      "description": "Оптимальное соотношение W/TH",
+      "settings": {
+        "frequency_mhz": 600,
+        "voltage_mv": 1250,
+        "work_level": 2
+      }
+    }
+  },
+  
+  "apply_instructions": {
+    "bash": "echo '{\"command\":\"privileged\",\"arg\":\"ascset=<chip_id>,<freq>,<volt>'}' | nc -w 3 192.168.31.133 4028",
+    "python": "send_privileged('ascset', f'{chip_id},{freq},{voltage}')",
+    "apply_all_chips": "for i in {0..9}; do echo \"ascset=$i,$freq,$volt\"; done",
+    "save_config": "echo '{\"command\":\"privileged\",\"arg\":\"save\"}' | nc -w 3 192.168.31.133 4028"
+  },
+  
+  "safety_limits": {
+    "min_frequency_mhz": 25,
+    "max_frequency_mhz": 800,
+    "min_voltage_mv": 1150,
+    "max_voltage_mv": 1450,
+    "max_temperature_c": 85,
+    "max_hw_error_percent": 0.1
+  }
+}

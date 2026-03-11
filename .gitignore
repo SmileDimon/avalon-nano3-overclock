@@ -1,0 +1,45 @@
+# Исключить бинарные файлы
+*.bin
+*.img
+*.kdimg
+*.exe
+*.dll
+
+# Исключить большие файлы
+*.mp4
+*.pdf
+*.zip
+
+# Временные файлы
+*.log
+*.tmp
+*.swp
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Конфигурации с чувствительными данными
+*.conf.local
+*.secret
+*.key
+
+# Извлечь строки (генерируется скриптом)
+firmware_info/all_strings.txt
+firmware_info/cli_options.txt
+firmware_info/api_commands.txt
+firmware_info/avalon_params.txt
+firmware_info/web_cgi.txt
+firmware_info/file_paths.txt
+firmware_info/log_messages.txt
+firmware_info/network_params.txt

@@ -1,0 +1,70 @@
+=== BTCMiner Firmware Information ===
+
+Binary: btcminer_original
+Version: CGMiner 4.11.1 (Avalon Nano 3)
+Architecture: RISC-V 64-bit
+Build Date: 2025 (June-July)
+
+=== Build Information ===
+
+Source Paths:
+- /home/wangjunshuai/workspace/heater/k230_sdk/app_heater/cgminer/
+- /home/wangjunshuai/workspace/heater/k230_sdk/app_heater/web/cgi/
+
+Compiler: GCC for RISC-V
+Target: Kendryte K230 SoC
+
+=== Technical Specifications ===
+
+SoC: Kendryte K230
+- Architecture: RISC-V 64-bit
+- Frequency: 1.6 GHz
+- RAM: 128MB
+- Flash: 128MB NAND
+
+ASIC: A3198 (10 chips)
+- Stock Frequency: 500-700 MHz
+- Stock Voltage: 1200-1300 mV
+- Max Frequency: 800 MHz
+- Max Voltage: 1450 mV
+
+=== CGMiner API ===
+
+Port: 4028
+Protocol: JSON
+Commands:
+- Read-only: version, summary, devs, devdetails, pools, stats, config
+- Privileged: ascset, setconfig, addpool, switchpool, restart, save
+
+=== Overclock Parameters ===
+
+--avalon10-freq [25-800]           # Frequency in MHz
+--avalon10-voltage [1150-1450]     # Voltage in mV
+--avalon10-freq-sel [0-4]          # Frequency selector
+--avalon10-voltage-level [0-75]    # Voltage level
+--avalon10-core-clk-sel [0-1]      # Core clock selector
+work_level [0-2]                   # 0=Low, 1=Medium, 2=High
+
+=== Web Interface ===
+
+Port: 80 (HTTP)
+CGI Scripts:
+- /cgconf.cgi - CGMiner configuration
+- /cglog.cgi - CGMiner logs
+- /network.cgi - Network settings
+- /apssidconf.cgi - Wi-Fi settings
+- /get_minerinfo.cgi - Miner information
+
+=== Security ===
+
+Privileged Cookie: ff0000ff4813494d137e1631bba301d5
+Vulnerability: timezoneconf.cgi (SSH access)
+
+=== File Statistics ===
+
+Binary Size: 2.5 MB
+Total Strings: 12,905
+CLI Options: 40+
+API Commands: 50+
+
+=== Extracted: 11 March 2026 ===
