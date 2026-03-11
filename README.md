@@ -220,3 +220,28 @@ TON: UQCl2z15wB8oZEEs2LCvZQgJX4iuK7lxneHEF7bTyzvM3hDc
 
 *Документ создан на основе анализа прошивки 2025061101*
 *Последнее обновление: 2026-03-11*
+
+---
+
+## 🌐 Веб-интерфейс
+
+### Advanced Settings Page
+
+**Файл:** `advanced_full.html`
+
+**Установка:**
+
+```bash
+# Через SSH
+ssh admin@192.168.31.133
+echo 'admin' | sudo -S cp /home/smile/avalon_patch/advanced_full.html /mnt/heater/www/html/advanced.html
+```
+
+**URL:** `http://192.168.31.133/advanced.html`
+
+**Функции:**
+- ✨ Privileged API Control - выполнение API команд
+- ⚡ Quick Overclock Presets - Stock, Mild, Medium, Extreme
+- 🎛️ Work Level Configuration - 0 (обогрев), 1, 2 (майнинг)
+- 📊 Real-time мониторинг статуса
+
