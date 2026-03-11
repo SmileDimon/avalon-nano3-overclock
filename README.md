@@ -201,13 +201,13 @@ avalon_patch/
 **Дмитрий (SmileDimon)**
 
 - GitHub: https://github.com/SmileDimon
-- Telegram: @clawadict_bot (Клавик)
+- Telegram: @Dim5mail (Дмитрий)
 
 ---
 
 ## 💰 Поддержать проект
 
-Если документация помогла, рассмотрите пожертвование:
+Если документация помогла, принимаю пожертвования:
 
 ```
 BEP-20: 0xDdCE054935efbfdf53177d59f2771dfDc2baAb9D
