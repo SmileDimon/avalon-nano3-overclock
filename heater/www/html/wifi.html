@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv='Cache-Control' content='no-cache, must-revalidate' />
+  <meta http-equiv='pragma' content='no-cache' />
+  <title>Wi-Fi Setup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 600px;
+      height: 400px;
+      background: #eee;
+      border: 1px solid #aaa;
+      border-radius: 20px;
+    }
+
+    .container .title {
+      text-align: center;
+    }
+
+    .container .fillout {
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .container .inputline {
+      height: 40px;
+      display: inline-flex;
+      align-items: flex-end;
+      margin-bottom: 20px;
+      width: 420px;
+    }
+
+    .container .inputspan {
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 300px;
+      height: 30px;
+      box-sizing: border-box;
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+    }
+
+    button {
+      height: 30px;
+      padding: 5px 20px;
+      font-size: 14px;
+      margin-left: 10px;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    #namespace {
+      display: none;
+    }
+
+    #wordspace {
+      display: inline-flex;
+    }
+
+    #nonespace {
+      display: none;
+    }
+
+    #nonespace button {
+      margin: 0 auto;
+    }
+
+    button:hover {
+      background-color: floralwhite;
+    }
+
+    .horizontal_space {
+      height: 20px;
+    }
+
+    .info_space {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="title">Wi-Fi Setup</h1>
+    <div class="fillout">
+      <form name="wifiForm" id="wifiForm" method="post" action="wifi.cgi">
+        <div class="inputline">
+          <span class="inputspan">
+            <label for="ssid">Wi-Fi SSID:</label>
+            <select name="ssid" id="ssid" placeholder="select Wi-Fi ssid" onchange="ssidOnChange(this)"></select>
+          </span>
+          <button type="submit" onclick="updateSSID()">REFRESH</button>
+        </div>
+        <div class="horizontal_space"></div>
+        <div class="inputline" id="namespace">
+          <span class="inputspan">
+            <label for="identity">Identity:</label>
+            <input type="text" id="identity" name="identity" required>
+          </span>
+        </div>
+        <div class="inputline" id="wordspace">
+          <span class="inputspan">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+          </span>
+          <button type="submit" onclick="submitssid(this)">CONFIRM</button>
+        </div>
+        <div class="inputline" id="nonespace">
+          <button type="submit" onclick="submitssid(this)">CONNECT</button>
+        </div>
+      </form>
+      <div class="info_space" id="conn_info"></div>
+    </div>
+  </div>
+
+  <script>
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function AJAX(url, callback) {
+      var req = AJAX_init();
+      req.onreadystatechange = AJAX_processRequest;
+      function AJAX_init() {
+        if (window.XMLHttpRequest) {
+          return new XMLHttpRequest()
+        } else {
+          if (window.ActiveXObject) {
+            return new ActiveXObject("Microsoft.XMLHTTP")
+          }
+        }
+      }
+      function AJAX_processRequest() {
+        if (req.readyState == 4) {
+          if (req.status == 200) {
+            if (callback) {
+              callback(req.responseText)
+            }
+          }
+        }
+      }
+      this.doGet = function () {
+        req.open("GET", url, true);
+        req.send(null)
+      };
+      this.doPost = function (body) {
+        req.open("POST", url, true);
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        req.setRequestHeader("ISAJAX", "yes");
+        req.send(body)
+      }
+    }
+
+    function ssidinfoCallback(req) {
+      const ssid_list = req.ssid_list;
+
+      if (ssid_list && ssid_list.length > 0) {
+        const select = document.getElementById("ssid");
+        let op = document.createElement("option");
+        op.value = 'Select';
+        op.textContent = 'Select Wi-Fi';
+        select.appendChild(op);
+
+        ssid_list.forEach(obj => {
+          // check UTF-8 code
+          if (obj.ssid.includes("\\x")) {
+            const regex = /(\\x..)*/g;
+
+            obj.ssid = obj.ssid.replace(/(\\x..){1,3}/g, match => {
+              const bytes = match.split("\\x").slice(1).map(byte => parseInt(byte, 16));
+              return new TextDecoder().decode(new Uint8Array(bytes));
+            });
+          }
+          let option = document.createElement("option");
+          option.value = obj.ssid;
+          option.textContent = obj.ssid;
+          option.setAttribute("auth", obj.auth);
+          select.appendChild(option);
+        });
+      }
+    }
+
+    function ssidOnChange(select) {
+      let option = select.options[select.selectedIndex];
+      let auth = option.getAttribute("auth");
+      if ([1, 2, 3].includes(parseInt(auth))) {
+        $("namespace").style.display = "none";
+        $("wordspace").style.display = "none";
+        $("nonespace").style.display = "inline-flex";
+      }
+      if ([5, 7].includes(parseInt(auth))) {
+        $("namespace").style.display = "none";
+        $("wordspace").style.display = "inline-flex";
+        $("nonespace").style.display = "none";
+      }
+      if ([6, 8].includes(parseInt(auth))) {
+        $("namespace").style.display = "inline-flex";
+        $("wordspace").style.display = "inline-flex";
+        $("nonespace").style.display = "none";
+      }
+    }
+
+    function updateSSID() {
+      // delete cache
+      const select = document.getElementById("ssid");
+      select.innerHTML = '';
+
+      document.getElementById("namespace").style.display = "none";
+      document.getElementById("wordspace").style.display = "inline-flex";
+      document.getElementById("nonespace").style.display = "none";
+
+      var oUpdate;
+      oUpdate = new AJAX("get_local_ssid.cgi?num=" + Math.random(),
+        function (t) {
+          try {
+            eval(t)
+          } catch (e) {
+            console.log("updateSSID err:" + e.message)
+          }
+        });
+      oUpdate.doGet();
+    }
+
+    function submitssid(o) {
+      const ssid = document.getElementById("ssid").value;
+      const identity = document.getElementById("identity").value.trim(); // Trim whitespace
+      const password = document.getElementById("password").value.trim(); // Trim whitespace
+      const selectElement = document.getElementById("ssid");
+      const selectedIndex = selectElement.selectedIndex;
+      const selectedOption = selectElement.options[selectedIndex];
+      let auth = selectedOption.getAttribute("auth");
+
+      if ([5, 7].includes(parseInt(auth)) && (ssid == "" || password == "")) {
+        event.preventDefault(); // Prevent form submission
+        alert("Please fill in all fields."); // Display an alert message
+        return false; // Stop further execution
+      }
+      if ([6, 8].includes(parseInt(auth)) && (ssid == "" || identity == "" || password == "")) {
+        event.preventDefault(); // Prevent form submission
+        alert("Please fill in all fields."); // Display an alert message
+        return false; // Stop further execution
+      }
+
+      wifiForm.submit();
+      alert("to connect " + document.getElementById("ssid").value);
+    }
+
+    var connect_ssid = '';
+    var connect_start = 0;
+    var connect_timeout = 0;
+    function getWifiStats() {
+      let info_conn = document.getElementById("conn_info");
+
+      if (connect_start > 0) {
+        connect_timeout = connect_timeout + 1;
+
+        if (connect_timeout >= 13) {
+          info_conn.innerHTML = `[${connect_ssid}] connect timeout, please check network or password`;
+          clearInterval(wifiStatsTimer);
+          connect_timeout = 0;
+          return;
+        }
+      }
+
+      var oUpdate;
+      oUpdate = new AJAX("get_wifi_stats.cgi?num=" + Math.random(),
+        function (t) {
+          try {
+            eval(t)
+          } catch (e) {
+            console.log("get wifi stats err:" + e.message)
+          }
+        });
+      oUpdate.doGet();
+    }
+
+    function wif_statsCallback(req) {
+      let state = req.conn_state;
+
+      if (state == 0) {
+        return;
+      }
+
+      let info_conn = document.getElementById("conn_info");
+      connect_ssid = req.ssid_config;
+
+      if (state == 1) {
+        connect_start = 1;
+        info_conn.innerHTML = `Connecting [${req.ssid_config}], please wait...`;
+        return;
+      } else if ((state == 2) && (connect_start > 0)) {
+        info_conn.innerHTML = `[${req.ssid}] connected, please access IP [${req.ip}]`;
+        clearInterval(wifiStatsTimer);
+        connect_timeout = 0;
+        return;
+      } else if ((state == 3) && (connect_start > 0)) {
+        info_conn.innerHTML = `[${req.ssid_config}] connect failed, please check network or password`;
+        clearInterval(wifiStatsTimer);
+        connect_timeout = 0;
+        return;
+      }
+    }
+
+    let wifiStatsTimer = setInterval(getWifiStats, 2000);
+    updateSSID();
+
+    //ssidinfoCallback({ ssid_list: ['list1', 'list2', '\\xe5\\x98\\x89\\xe6\\xa5\\xa01'] })
+    // ssidinfoCallback({ "ssid_list": [{ "ssid": "ssid1", "auth": 1 }, { "ssid": "ssid5", "auth": 5 }, { "ssid": "ssid6", "auth": 6 }, { "ssid": "\\xe5\\x98\\x89\\xe6\\xa5\\xa01", "auth": 7 }, { "ssid": "ssid3", "auth": 8 }] });
+  </script>
+</body>
+
+</html>
