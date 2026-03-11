@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <title>Avalon Device - Advanced Settings</title>
+  <style type="text/css">
+    * { margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    li { list-style-type: none; }
+    body { margin: 0; background-color: #f2f2f2; position: relative; height: 100vh; width: 100vw; font-size: 0.14rem; }
+    a { text-decoration: none; color: #fff; }
+    a:hover { color: #f5533d; }
+    .bg { background-position: center; background-size: cover; background-repeat: no-repeat; }
+    .btn { cursor: pointer; }
+    .img-logo { float: left; margin-top: 0.06rem; margin-left: 0.58rem; width: 0.37rem; height: 0.38rem; }
+    .header { width: 100%; height: 0.5rem; background-color: #464c5b; }
+    .header .state { float: right; height: 100%; }
+    .header .state .logout { height: 100%; color: #fff; line-height: 0.5rem; margin-right: 0.5rem; float: left; cursor: pointer; }
+    .nav { float: left; width: 2rem; height: calc(100vh - 0.5rem); background-color: #464c5b; border-right: 1px solid rgba(0, 0, 0, 1); }
+    .nav .menu li { width: 100%; height: 0.5rem; background-color: rgba(252, 252, 252, 1); text-indent: 0.4rem; border-bottom: 1px solid rgba(242, 242, 242, 1); line-height: 0.5rem; }
+    .nav .menu li strong { width: 100%; height: 100%; cursor: pointer; }
+    .nav .menu li strong.cur { color: #ea7500; }
+    .content { float: left; height: calc(100vh - 0.5rem); overflow: hidden; }
+    .content .top { position: absolute; left: 2.1rem; top: 0.6rem; width: calc(100vw - 2.2rem); height: 0.54rem; background-color: rgba(255, 255, 255, 1); }
+    .content .top .miner_name { font-weight: 700; font-size: 0.18rem; margin-left: 0.2rem; float: left; line-height: 0.54rem; }
+    .content .main { width: calc(100vw - 2rem); height: calc(100vh - 1.14rem); overflow: auto; position: absolute; top: 1.14rem; left: 2rem; }
+    .main .title { width: calc(100vw - 2.2rem); height: 0.55rem; line-height: 0.55rem; margin: 0 0.1rem; font-size: 0.18rem; font-weight: 700; background-color: rgba(215, 215, 215, 1); text-indent: 0.2rem; }
+    .main .panel { width: calc(100vw - 2.2rem); background-color: #fff; margin: 0 0.1rem; padding: 0.2rem; }
+    .form-list { padding-top: 0; }
+    .form-list li { height: 0.4rem; padding: 0.1rem 0; clear: both; }
+    .form-list label { float: left; width: 2rem; padding: 0 0.3rem 0.1rem 0; line-height: 0.4rem; text-align: right; font-style: normal; }
+    .form-list input, .form-list select { width: 3rem; border: 1px solid #dcdee0; border-radius: 3px; height: 0.4rem; line-height: 0.4rem; padding: 0 0.16rem; font-size: 14px; color: #555; outline: 0; box-sizing: border-box; float: left; margin-right: 0.2rem; }
+    .form-list .btn-save { width: 1.4rem; height: 0.4rem; background-color: rgba(22, 155, 213, 1); border: 0; color: #fff; border-radius: 5px; cursor: pointer; margin-left: 10px; }
+    .form-list .btn-save:hover { background-color: rgba(22, 155, 213, 0.8); }
+    .status-box { padding: 0.2rem; background-color: #f9f9f9; border: 1px solid #ddd; margin-top: 0.2rem; }
+    .log-output { background-color: #1e1e1e; color: #0f0; padding: 0.2rem; font-family: monospace; font-size: 0.12rem; white-space: pre-wrap; max-height: 3rem; overflow-y: auto; }
+    .warning { color: #f5533d; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="bg img-logo"></div>
+    <div class="state">
+      <div class="logout" pageid="logout1" onclick="logout(this);">Logout</div>
+    </div>
+  </div>
+  <div class="nav">
+    <form name="cgiform" id="nav" method="post" action="">
+      <ul class="menu">
+        <li><i>&gt;</i><strong pageid="dashboard" onclick="tabChange(this);">Overview</strong></li>
+        <li><i>&gt;</i><strong pageid="cgconf" onclick="tabChange(this);">Configuration</strong></li>
+        <li><i>&gt;</i><strong pageid="network" onclick="tabChange(this);">Network</strong></li>
+        <li><i>&gt;</i><strong pageid="cglog" onclick="tabChange(this);">Log</strong></li>
+        <li><i>&gt;</i><strong pageid="advanced" onclick="tabChange(this);" class="cur">Advanced</strong></li>
+      </ul>
+      <ul class="menu" id="side_nav">
+        <li><i>&gt;</i><strong>System</strong>
+          <ul class="menu-ch">
+            <li><i>&gt;&gt;</i><strong pageid="admin" onclick="tabChange(this);">Password</strong></li>
+            <li><i>&gt;&gt;</i><strong pageid="upgrade" onclick="tabChange(this);">Upgrade</strong></li>
+            <li><i>&gt;&gt;</i><strong pageid="reboot1" onclick="reboot(this);">Reboot</strong></li>
+            <li><i>&gt;&gt;</i><strong pageid="resetfac1" onclick="resetSet(this);">ResetFac</strong></li>
+          </ul>
+        </li>
+      </ul>
+    </form>
+  </div>
+  <div class="content">
+    <div class="top">
+      <div class="miner_name">Avalon Nano 3 - Advanced Settings</div>
+    </div>
+    <div class="main">
+      <div class="title">Privileged API Control</div>
+      <div class="panel">
+        <div class="status-box">
+          <p class="warning">⚠️ WARNING: Advanced settings can damage your hardware! Use at your own risk!</p>
+          <p>These commands require privileged access to the miner's API (port 4028).</p>
+        </div>
+        
+        <ul class="form-list">
+          <li>
+            <label>API Command:</label>
+            <select id="apiCommand">
+              <option value="edevs">edevs - Extended Device Status</option>
+              <option value="summary">summary - Miner Summary</option>
+              <option value="devs">devs - Device Statistics</option>
+              <option value="config">config - Current Configuration</option>
+              <option value="privileged_set_test_mode">set_test_mode=1 - Enable Test Mode</option>
+              <option value="privileged_debug">debug=1 - Enable Debug Mode</option>
+              <option value="privileged_ascset">ascset - Set ASIC Frequency/Voltage</option>
+              <option value="privileged_setconfig">setconfig - Set cgminer Config</option>
+              <option value="privileged_dorestart">dorestart - Restart ASIC</option>
+              <option value="dosave">dosave - Save Configuration</option>
+            </select>
+            <input type="text" id="apiArg" placeholder="Argument (e.g., 0,750,1350)" style="width: 2rem;" />
+            <input class="btn-save" value="Execute" type="button" onclick="executeAPI()" />
+          </li>
+        </ul>
+        
+        <div class="status-box">
+          <label>Response:</label>
+          <div id="apiResponse" class="log-output">Waiting for command...</div>
+        </div>
+      </div>
+      
+      <div class="title">Quick Overclock Presets</div>
+      <div class="panel">
+        <ul class="form-list">
+          <li>
+            <label>Stock (500 MHz):</label>
+            <input class="btn-save" value="Apply Stock" type="button" onclick="applyPreset(500, 1200)" />
+          </li>
+          <li>
+            <label>Mild OC (650 MHz):</label>
+            <input class="btn-save" value="Apply Mild OC" type="button" onclick="applyPreset(650, 1275)" />
+          </li>
+          <li>
+            <label>Medium OC (750 MHz):</label>
+            <input class="btn-save" value="Apply Medium OC" type="button" onclick="applyPreset(750, 1350)" />
+          </li>
+          <li>
+            <label>Extreme OC (800 MHz):</label>
+            <input class="btn-save" value="Apply Extreme OC" type="button" onclick="applyPreset(800, 1450)" />
+          </li>
+        </ul>
+        <div id="ocStatus" class="status-box" style="display:none;"></div>
+      </div>
+      
+      <div class="title">Work Level Configuration</div>
+      <div class="panel">
+        <ul class="form-list">
+          <li>
+            <label>Current Work Level:</label>
+            <span id="currentWorkLevel">Loading...</span>
+            <input class="btn-save" value="Refresh" type="button" onclick="checkWorkLevel()" />
+          </li>
+          <li>
+            <label>Set Work Level:</label>
+            <select id="workLevelSelect">
+              <option value="0">0 - Low (Heater Mode)</option>
+              <option value="1">1 - Medium</option>
+              <option value="2">2 - High (Mining Mode)</option>
+            </select>
+            <input class="btn-save" value="Apply" type="button" onclick="setWorkLevel()" />
+          </li>
+        </ul>
+        <div class="status-box">
+          <p><strong>Note:</strong> Work level changes require a reboot to take effect permanently.</p>
+          <p>0 = Heater mode (low power), 1 = Medium, 2 = Mining mode (max power)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function $(id) { return document.getElementById(id); }
+    
+    function logout(o) {
+      var win = confirm("Are you sure you want to logout?");
+      if (win == true) { cgiform.action = "logout.cgi"; cgiform.submit(); }
+    }
+    
+    function reboot(o) {
+      var win = confirm("Are you sure you want to reboot?");
+      if (win == true) { cgiform.action = "reboot_btn.cgi"; cgiform.submit(); }
+    }
+    
+    function resetSet(o) {
+      var win = confirm("Factory resetting?");
+      if (win == true) { cgiform.action = "resetfac_btn.cgi"; cgiform.submit(); }
+    }
+    
+    function tabChange(o) {
+      var url = o.getAttribute("pageid") + ".cgi";
+      cgiform.action = url;
+      cgiform.submit();
+    }
+    
+    function UpdatePageCallback(req) {
+      var pageId = req.pageId;
+      var emList = document.getElementsByTagName("strong");
+      for (var index = 0; index < emList.length; index++) {
+        if (emList[index].getAttribute("pageid") == pageId) {
+          emList[index].setAttribute("class", "cur");
+        } else {
+          emList[index].setAttribute("class", "");
+        }
+      }
+    }
+    
+    // API Functions
+    function executeAPI() {
+      var cmd = $("apiCommand").value;
+      var arg = $("apiArg").value;
+      var output = $("apiResponse");
+      
+      output.innerHTML = "Executing: " + cmd + (arg ? " (" + arg + ")" : "") + "...";
+      
+      var url = "get_minerinfo.cgi?cmd=" + encodeURIComponent(cmd) + "&arg=" + encodeURIComponent(arg) + "&t=" + Math.random();
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            try {
+              var resp = JSON.parse(xhr.responseText);
+              output.innerHTML = JSON.stringify(resp, null, 2);
+            } catch(e) {
+              output.innerHTML = xhr.responseText;
+            }
+          } else {
+            output.innerHTML = "Error: " + xhr.status + " " + xhr.statusText;
+          }
+        }
+      };
+      xhr.send();
+    }
+    
+    function applyPreset(freq, volt) {
+      var output = $("ocStatus");
+      output.style.display = "block";
+      output.innerHTML = "Applying preset: " + freq + " MHz / " + volt + " mV...";
+      
+      var cmd = "privileged";
+      var arg = "ascset=0," + freq + "," + volt;
+      
+      var url = "get_minerinfo.cgi?cmd=" + encodeURIComponent(cmd) + "&arg=" + encodeURIComponent(arg) + "&t=" + Math.random();
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            try {
+              var resp = JSON.parse(xhr.responseText);
+              if (resp.STATUS && resp.STATUS[0].Code == 46) {
+                output.innerHTML = "✅ Success! Applied " + freq + " MHz / " + volt + " mV";
+                output.innerHTML += "\nNote: Settings are temporary. For permanent OC, modify /etc/init.d/rcS and reboot.";
+              } else {
+                output.innerHTML = "❌ Error: " + JSON.stringify(resp);
+              }
+            } catch(e) {
+              output.innerHTML = "Response: " + xhr.responseText;
+            }
+          } else {
+            output.innerHTML = "Error: " + xhr.status;
+          }
+        }
+      };
+      xhr.send();
+    }
+    
+    function checkWorkLevel() {
+      var output = $("currentWorkLevel");
+      output.innerHTML = "Loading...";
+      
+      var url = "get_minerinfo.cgi?cmd=config&arg=&t=" + Math.random();
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            try {
+              var resp = JSON.parse(xhr.responseText);
+              output.innerHTML = JSON.stringify(resp, null, 2);
+            } catch(e) {
+              output.innerHTML = xhr.responseText;
+            }
+          }
+        }
+      };
+      xhr.send();
+    }
+    
+    function setWorkLevel() {
+      var level = $("workLevelSelect").value;
+      var output = $("ocStatus");
+      output.style.display = "block";
+      output.innerHTML = "Setting work_level = " + level + "...";
+      output.innerHTML += "\n⚠️ This requires SSH access. Use privileged_api.sh or modify /data/usrcon/systemcfg.ini manually.";
+    }
+    
+    // Initialize
+    window.onload = function() {
+      checkWorkLevel();
+    };
+  </script>
+</body>
+</html>
